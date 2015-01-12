@@ -3,6 +3,7 @@ import string
 import urllib2
 from sys import stdout
 
+
 class Ignore:
 
     def __init__(self):
@@ -10,27 +11,22 @@ class Ignore:
         self.source = 'https://raw.github.com/github/gitignore/master/'
 
     def __should_overwrite(self, file):
-        if os.path.isfile(file):
-            overwrite = raw_input(".gitignore exists, overwrite [y/N]? ")
-            return string.capitalize(overwrite) == 'Y'
-        else:
-            return False
+        overwrite = raw_input(".gitignore exists, overwrite [y/N]? ")
+        return string.capitalize(overwrite) == 'Y'
 
     def get_file(self, lang, destination=os.getcwd()):
         url = self.source + string.capitalize(lang) + '.gitignore'
         file_name = os.path.join(destination, '.gitignore')
-        if self.__should_overwrite(file_name) is False:
+        if os.path.isfile(file_name) and self.__should_overwrite(file_name) is False:
             return
         try:
             response = urllib2.urlopen(url)
         except urllib2.HTTPError, e:
             print '%s: The server could not fulfill the request.' % e.code
-        except URLError, e:
+        except urllib2.URLError, e:
             print 'Failed to reach the server: %s' % e.reason
         else:
             ignore_file = open(file_name, 'wb')
-            meta = response.info()
-            file_size = int(meta.getheaders("Content-Length")[0])
             stdout.write("Downloading")
 
             downloaded = 0

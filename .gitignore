@@ -12,6 +12,9 @@ sdist
 develop-eggs
 .installed.cfg
 
+#Virtualenv
+env
+
 # Installer logs
 pip-log.txt
 
